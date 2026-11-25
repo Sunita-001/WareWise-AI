@@ -83,7 +83,7 @@ def stock_change(sku,kind,qty,ref):
         c.commit()
     return before,after
 def forecast(sku,days):
-    with db() as c:x=pd.read_sql_query("SELECT sold_on,quantity FROM sales WHERE sku=?",(sku,),c)
+    with db() as c:x=pd.read_sql_query("SELECT sold_on,quantity FROM sales WHERE sku=?",c,params=(sku,))
     if x.empty:return 0.0,0
     x["sold_on"]=pd.to_datetime(x.sold_on); d=x.groupby("sold_on").quantity.sum()
     d=d.reindex(pd.date_range(d.index.min(),d.index.max(),freq="D"),fill_value=0)
